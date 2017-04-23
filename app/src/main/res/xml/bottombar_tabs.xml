@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_translate"
+        icon="@drawable/ic_translate"
+        title="Translate here"
+        barColorWhenSelected="#ffffb3"/>
+    <tab
+        id="@+id/tab_history"
+        icon="@drawable/ic_history"
+        title="Store here"
+        barColorWhenSelected= "#ccff99"/>
+    <tab
+        id="@+id/tab_favorites"
+        icon="@drawable/ic_favorite"
+        title="Enjoy here"
+        barColorWhenSelected= "#ffcccc"/>
+</tabs>

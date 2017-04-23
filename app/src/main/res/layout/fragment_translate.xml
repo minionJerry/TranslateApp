@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context="com.test.translateapp.fragments.TranslateFragment">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/editTextToType"
+        android:editable="true"
+        android:hint="@string/type_me"
+        android:textAlignment="center"
+        android:background="@drawable/frame"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3.0"
+        android:id ="@+id/linearLayout"
+        android:layout_below="@id/editTextToType"
+        >
+        <Button
+            android:layout_width="0.0dip"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="@string/select_final_language"
+            android:textSize="10sp"
+            android:id="@+id/translateToBtn"
+            android:textColor ="@color/colorAccent"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/button"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.5"
+            android:src="@drawable/ic_arrow_forward"
+            android:contentDescription="@string/to_select_lang"
+            android:id="@+id/arrowPic"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.5"
+            android:id="@+id/addToFavBtn"
+            android:src="@drawable/ic_favorite"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/resultTextView"
+        android:layout_below="@id/linearLayout"
+        android:hint="@string/translatedResult"
+        android:textAlignment="center"
+        android:background="@drawable/frame"
+        android:textIsSelectable="true"
+        android:editable="false"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="10dp"
+        android:autoText="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" «Переведено сервисом «Яндекс.Переводчик» http://translate.yandex.ru/."
+        android:layout_below="@+id/resultTextView"
+        android:textSize="20sp"
+        android:padding="12dp"
+   />
+
+</RelativeLayout>
