@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.test.translateapp.MainActivity">
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:id="@+id/toolbar"-->
-        <!--android:layout_alignParentLeft = "true"-->
-        <!--android:layout_alignParentStart = "true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>-->
 
     <FrameLayout
         android:id="@+id/contentContainer"
@@ -31,8 +22,7 @@
         app:bb_tabXmlResource="@xml/bottombar_tabs"
         app:bb_behavior="shifting"
         app:bb_inActiveTabAlpha="0.3"
-        app:bb_inActiveTabColor="@color/colorAccent"
-        app:bb_activeTabColor="@color/colorAccent"
-        app:bb_titleTypeFace="fonts/Once upon a time.ttf"
+        app:bb_inActiveTabColor="#000"
+        app:bb_activeTabColor="#000"
         />
 </RelativeLayout>

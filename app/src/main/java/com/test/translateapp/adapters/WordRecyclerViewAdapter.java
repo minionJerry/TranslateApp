@@ -21,7 +21,6 @@ public class WordRecyclerViewAdapter extends RecyclerView.Adapter<WordRecyclerVi
         mValues = items;
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -42,19 +41,15 @@ public class WordRecyclerViewAdapter extends RecyclerView.Adapter<WordRecyclerVi
         return mValues.size();
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mText;
         public TextView mTranslatedText;
-        public TextView mLang;
         public ImageView mIsFavorite;
-
 
         public ViewHolder(View view) {
             super(view);
             mText = (TextView)view.findViewById(R.id.text);
             mTranslatedText = (TextView)view.findViewById(R.id.translatedText);
-          //  mLang = (TextView)view.findViewById(R.id.lang);
             mIsFavorite = (ImageView)view.findViewById(R.id.isFavorite);
         }
     }

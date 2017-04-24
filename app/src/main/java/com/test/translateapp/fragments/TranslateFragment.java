@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,18 +34,17 @@ import retrofit2.Response;
 
 public class TranslateFragment extends Fragment {
 
-    private static final java.lang.String DIALOG_REPEAT_SETTING ="some tag" ;
-    TextView finalLangBtn;
-    EditText inputEditTxt;
-    TextView outputTxtView;
     static final String KEYAPI = "trnsl.1.1.20170316T165017Z.c83d6fdb6fc20c53.22b2b05fe8551fc2c266acaddcecfe116f37d818";
+    TextView finalLangBtn;
+    TextView outputTxtView;
+    EditText inputEditTxt;
+    ImageView pic;
+    ImageView addToFavBtn;
+    HashMap<String,String> listOfLangCodes;
     ArrayList<String> langList;
     String finalLang;
     String sourceText;
     String translatedText;
-    HashMap<String,String> listOfLangCodes;
-    ImageView pic;
-    ImageView addToFavBtn;
     DatabaseHelper db;
 
     @Override
@@ -54,6 +56,11 @@ public class TranslateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_translate, container, false);
+        getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.colorTranslateStatus));
+        Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbarTranslate);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorTranslate));
+
         finalLangBtn = (Button)view.findViewById(R.id.translateToBtn);
         inputEditTxt = (EditText)view.findViewById(R.id.editTextToType);
         outputTxtView = (TextView)view.findViewById(R.id.resultTextView);
@@ -66,7 +73,6 @@ public class TranslateFragment extends Fragment {
 
         // get list of languages and their codes
         getListOfLanguages();
-        // fill array adapter with langList
         final ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_single_choice,langList);
 
         finalLangBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +82,6 @@ public class TranslateFragment extends Fragment {
                 builder.setTitle("Choose final language")
                         .setSingleChoiceItems(langAdapter, 0, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
-                                //onclick
                                 finalLang = langAdapter.getItem(item);
                                 dialog.dismiss();
                                 Toast.makeText(getActivity(),finalLang,Toast.LENGTH_SHORT).show();
@@ -89,7 +94,6 @@ public class TranslateFragment extends Fragment {
             }
         });
 
-        // translate text to chosen language on click button
         pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,9 +142,8 @@ public class TranslateFragment extends Fragment {
 
     private void translateText(){
         String lang =  getLangCode();
-      //  String translatedText = null;
         if (lang.isEmpty()){
-            Toast.makeText(getContext(),"Choose language.",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),"Choose language",Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -153,7 +156,7 @@ public class TranslateFragment extends Fragment {
                     //add record to table
                     db.addText(new TextModel(sourceText,translatedText,finalLang,0));
                 }
-                else Toast.makeText(getContext(),"Cannot translate",Toast.LENGTH_LONG).show();
+                else Toast.makeText(getContext(),"Cannot translate. Something went wrong.",Toast.LENGTH_LONG).show();
             }
 
             @Override

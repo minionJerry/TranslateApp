@@ -27,9 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 2);
         SQLiteDatabase db = this.getWritableDatabase();
-       //onUpgrade(2,3);
    }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -44,9 +42,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
-
-    // Adding new item to favorites
     public void addText(TextModel text) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -54,7 +49,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_TRANSLTEXT, text.getTranslateText());
         values.put(KEY_LANG, text.getLang());
         values.put(KEY_ISFAVORITE, text.isFavorite());
-        // inserting values to db
         db.insert(TABLE_TEXT,null,values);
         db.close();
     }
@@ -66,10 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(KEY_ISFAVORITE, newValue);
         db.update(TABLE_TEXT, cv, KEY_ID + "= ?", new String[] {String.valueOf(model.getId())});
         db.close();
-
     }
 
-    // Getting single item
     public TextModel getText(String text,String translatedText,String destLang) {
         SQLiteDatabase db = this.getReadableDatabase();
         TextModel newText = null;
@@ -85,7 +77,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return newText;
     }
 
-    // Getting All items
     public List<TextModel> getAllTexts() {
         List<TextModel> textList = new ArrayList<TextModel>();
         String request = "SELECT * FROM " + TABLE_TEXT;
@@ -107,7 +98,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return textList;
     }
-
 
     public List<TextModel> getAllFavoriteTexts() {
         List<TextModel> textList = new ArrayList<TextModel>();
@@ -131,17 +121,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return textList;
     }
 
-    // Getting count of items
     public int getTextCount() {
         String countQuery = "SELECT  * FROM " + TABLE_TEXT;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         cursor.close();
         db.close();
-        // return count
         return cursor.getCount();
     }
-    // Updating single item
+
     public int updateText(TextModel text) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -151,19 +139,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_LANG, text.getLang());
         values.put(KEY_ISFAVORITE,text.isFavorite());
         db.close();
-        // updating row
         return db.update(TABLE_TEXT, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(text.getId()) });
     }
 
-    // Deleting single item
     public void deleteText(TextModel text) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TEXT, KEY_ID + " = ?",
                 new String[] { String.valueOf(text.getId()) });
         db.close();
     }
-
-
-
 }

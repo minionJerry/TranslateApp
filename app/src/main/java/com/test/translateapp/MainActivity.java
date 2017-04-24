@@ -14,7 +14,6 @@ import com.test.translateapp.fragments.TranslateFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-
     TranslateFragment tFrag;
     HistoryFragment hFrag;
     FavoritesFragment fFrag;
@@ -23,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         tFrag = new TranslateFragment();
         hFrag = new HistoryFragment();
         fFrag = new FavoritesFragment();
-
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -50,4 +49,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.contentContainer, fragment);
         transaction.commit();
     }
+
+
 }

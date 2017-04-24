@@ -5,18 +5,22 @@
               android:orientation="vertical"
              tools:context="com.test.translateapp.fragments.TranslateFragment">
 
+    <android.support.v7.widget.Toolbar
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/colorPrimary"
+    android:id="@+id/toolbarTranslate"
+    />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/editTextToType"
         android:editable="true"
+        android:layout_below="@id/toolbarTranslate"
         android:hint="@string/type_me"
         android:textAlignment="center"
         android:background="@drawable/frame"
-        android:textIsSelectable="false"
-        android:textSize="20sp"
-        android:layout_alignParentEnd="false"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="100dp"
@@ -48,6 +52,7 @@
             android:layout_weight="0.5"
             android:src="@drawable/ic_arrow_forward"
             android:contentDescription="@string/to_select_lang"
+            android:tint="@color/colorAccent"
             android:id="@+id/arrowPic"/>
 
         <ImageView
@@ -56,8 +61,8 @@
             android:layout_height="30dp"
             android:layout_weight="0.5"
             android:id="@+id/addToFavBtn"
+            android:tint="@color/colorAccent"
             android:src="@drawable/ic_favorite"/>
-
     </LinearLayout>
 
 
@@ -71,7 +76,6 @@
         android:background="@drawable/frame"
         android:textIsSelectable="true"
         android:editable="false"
-        android:textSize="20sp"
         android:gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
@@ -83,10 +87,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" «Переведено сервисом «Яндекс.Переводчик» http://translate.yandex.ru/."
+        android:textColor ="@color/colorAccent"
+        android:text="«Переведено сервисом «Яндекс.Переводчик» http://translate.yandex.ru/."
         android:layout_below="@+id/resultTextView"
-        android:textSize="20sp"
-        android:padding="12dp"
+        android:padding="15dp"
    />
 
 </RelativeLayout>

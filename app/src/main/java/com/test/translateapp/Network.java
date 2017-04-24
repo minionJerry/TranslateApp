@@ -5,9 +5,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Каныкей on 16.03.2017.
- */
 public class Network {
     private static Network instance;
     private final TranslateYandexApi translateApi;

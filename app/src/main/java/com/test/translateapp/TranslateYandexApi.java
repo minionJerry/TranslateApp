@@ -7,9 +7,6 @@ import retrofit2.Call;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-/**
- * Created by Каныкей on 16.03.2017.
- */
 public interface TranslateYandexApi {
     @POST("api/v1.5/tr.json/getLangs")
     Call<LangList> getLangList(@Query("ui") String lang, @Query("key") String apiKey);

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-            >
+              android:layout_height="wrap_content">
 
      <LinearLayout
          android:layout_width="wrap_content"
@@ -13,7 +12,6 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:padding="12dp"
             android:text="blabla"
             android:textAppearance="?attr/textAppearanceListItem"
@@ -24,7 +22,6 @@
             android:id="@+id/translatedText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:layout_weight="0.50"
             android:paddingLeft="12dp"
             android:paddingEnd="12dp"
@@ -40,7 +37,7 @@
         android:paddingRight="12dp"
         android:paddingLeft="12dp"
         android:paddingTop="15dp"
-        android:tint="#ff0000"
+        android:tint="@color/colorAccent"
         android:id="@+id/isFavorite"
         android:layout_gravity="center_vertical"
         />

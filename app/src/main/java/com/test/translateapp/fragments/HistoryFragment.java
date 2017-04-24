@@ -2,9 +2,12 @@ package com.test.translateapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +23,11 @@ import java.util.List;
 
 public class HistoryFragment extends Fragment {
 
-    DatabaseHelper db;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     RecyclerView.ItemDecoration mDividerItemDecoration;
-
-
+    DatabaseHelper db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,10 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history_list, container, false);
+        getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.colorHistoryStatus));
+        Toolbar toolbar = (Toolbar)view.findViewById(R.id.toolbarHistory);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorHistory));
         db = new DatabaseHelper(getActivity());
         mRecyclerView = (RecyclerView)view.findViewById(R.id.historyList);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -45,8 +50,8 @@ public class HistoryFragment extends Fragment {
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
-        // Reading all favorites
-        Log.d("Reading: ", "Reading all contacts..");
+        Log.d("Reading: ", "Reading all texts..");
+
         List<TextModel> historyItems = db.getAllTexts();
         mAdapter = new WordRecyclerViewAdapter(historyItems);
         mRecyclerView.setAdapter(mAdapter);
@@ -54,7 +59,7 @@ public class HistoryFragment extends Fragment {
         for (TextModel item : historyItems) {
             String log = "Id: "+item.getId()+" ,Text: " + item.getText() + " ,TranslatedText: " + item.getTranslateText() + " , Lang" + item.getLang();
             // Writing items to log
-            Log.d("Name: ", log);
+            Log.d("Record: ", log);
         }
         db.close();
         return view;
