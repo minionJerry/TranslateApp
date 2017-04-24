@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +28,7 @@ import com.test.translateapp.models.TranslatingResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,11 +43,12 @@ public class TranslateFragment extends Fragment {
     ImageView pic;
     ImageView addToFavBtn;
     HashMap<String,String> listOfLangCodes;
- //   ArrayList<String> langList;
     String finalLang;
     String sourceText;
     String translatedText;
     DatabaseHelper db;
+    SharedPreferences prefs;
+    final String sharedPrefKey ="chosenLang";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,9 @@ public class TranslateFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorTranslate));
 
-        final SharedPreferences prefs = getActivity().getSharedPreferences(
+        prefs = getActivity().getSharedPreferences(
                 "chosenLanguage", Context.MODE_PRIVATE);
-        final String sharedPrefKey ="chosenLang";
+
         finalLangBtn = (Button)view.findViewById(R.id.translateToBtn);
         inputEditTxt = (EditText)view.findViewById(R.id.editTextToType);
         outputTxtView = (TextView)view.findViewById(R.id.resultTextView);
@@ -76,38 +77,7 @@ public class TranslateFragment extends Fragment {
         addToFavBtn = (ImageView) view.findViewById(R.id.addToFavBtn);
         db = new DatabaseHelper(getContext());
 
-        // get list of languages and their codes
-        final ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_single_choice,getListOfLanguages());
-        // get stored language from sharedPref
-        final String chosenLang = prefs.getString(sharedPrefKey,null);
-        // get position of stored language string in adapter
-        final int selected = (chosenLang!=null) ? langAdapter.getPosition(chosenLang) : -1;
-        //set title of btn with language string
-        if (chosenLang!= null) {
-            finalLangBtn.setText(chosenLang);
-        }
-
-        finalLangBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                builder.setTitle("Select destination language")
-                        .setSingleChoiceItems(langAdapter, selected, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                finalLang = langAdapter.getItem(item);
-                                // save chosen language position in sharedPref
-                                prefs.edit().putString(sharedPrefKey,finalLang).apply();
-                                dialog.dismiss();
-                                Toast.makeText(getActivity(),finalLang,Toast.LENGTH_SHORT).show();
-                                finalLangBtn.setText(finalLang);
-
-                            }
-                        })
-                        .show();
-
-            }
-        });
+        getListOfLanguages();
 
         pic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,34 +88,54 @@ public class TranslateFragment extends Fragment {
                 } else {
                     translateText();
                 }
-
             }
         });
 
         addToFavBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Inserting favorite item
                 Log.d("Insert: ", "Inserting ..");
                 TextModel textModel = db.getText(sourceText,translatedText,finalLang);
                 if (textModel!= null && textModel.isFavorite()!=1) {
-                    db.changeIsFavoriteStatus(textModel);
+                    db.changeToPositiveStatus(textModel);
                     Toast.makeText(getContext(),"Item is added to favorites successfully",Toast.LENGTH_SHORT).show();
                 } else Toast.makeText(getContext(),"You have to translate text first",Toast.LENGTH_SHORT).show();
             }
         });
+
         db.close();
         return view;
     }
 
-
-
-    private ArrayList<String> getListOfLanguages(){
-        final ArrayList<String> langList = new ArrayList<>();
+    private void getListOfLanguages(){
         Network.getInterface().getLangList("en",KEYAPI).enqueue(new Callback<LangList>()  {
             @Override
             public void onResponse(Call<LangList> call, Response<LangList> response) {
-                langList.addAll(response.body().getLangs());
+                List<String> list = new ArrayList<>(response.body().getLangs());
+
+                final String[] langArr = new String[3];
+                for (int i=0;i< langArr.length;i++){
+                    langArr[i] = list.get(i).toString();
+                }
+                final int langPosition = getLangPosition(langArr);
+
+                finalLangBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Select destination language")
+                                .setSingleChoiceItems(langArr, langPosition, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        finalLang = langArr[item].toString();
+                                        // save chosen language position in sharedPref
+                                        prefs.edit().putString(sharedPrefKey,finalLang).apply();
+                                        dialog.dismiss();
+                                        finalLangBtn.setText(finalLang);
+                                    }
+                                })
+                                .show();
+                    }
+                });
             }
 
             @Override
@@ -154,7 +144,19 @@ public class TranslateFragment extends Fragment {
                 t.printStackTrace();
             }
         });
-        return langList;
+    }
+
+    private int getLangPosition(String[] langlist){
+        final String chosenLang = prefs.getString(sharedPrefKey,null);
+        if (chosenLang!=null){
+            for (int i=0;i<langlist.length;i++){
+                if (langlist[i].equals(chosenLang)){
+                    finalLangBtn.setText(chosenLang);
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     private void translateText(){

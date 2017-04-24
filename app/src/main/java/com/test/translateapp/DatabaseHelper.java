@@ -53,9 +53,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void changeIsFavoriteStatus(TextModel model){
+    public void changeToPositiveStatus(TextModel model){
         SQLiteDatabase db = this.getWritableDatabase();
         int newValue = 1;
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_ISFAVORITE, newValue);
+        db.update(TABLE_TEXT, cv, KEY_ID + "= ?", new String[] {String.valueOf(model.getId())});
+        db.close();
+    }
+
+    public void changeToNegativeStatus(TextModel model){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int newValue = 0;
         ContentValues cv = new ContentValues();
         cv.put(KEY_ISFAVORITE, newValue);
         db.update(TABLE_TEXT, cv, KEY_ID + "= ?", new String[] {String.valueOf(model.getId())});

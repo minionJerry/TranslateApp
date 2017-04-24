@@ -15,13 +15,14 @@ import android.view.ViewGroup;
 
 import com.test.translateapp.DatabaseHelper;
 import com.test.translateapp.R;
+import com.test.translateapp.adapters.ItemClickListener;
 import com.test.translateapp.adapters.WordRecyclerViewAdapter;
 import com.test.translateapp.models.TextModel;
 
 import java.util.List;
 
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements ItemClickListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -64,4 +65,14 @@ public class HistoryFragment extends Fragment {
         db.close();
         return view;
     }
+
+    @Override
+    public void onItemClick(TextModel item) {
+        // тут удаляем элемент из БД
+            db.changeToNegativeStatus(item);
+
+        //тут удаляем из адаптера.
+       //   mAdapter.removeItem(item);
+    }
 }
+
