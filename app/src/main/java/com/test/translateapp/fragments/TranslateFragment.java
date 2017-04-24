@@ -1,7 +1,9 @@
 package com.test.translateapp.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -41,7 +43,7 @@ public class TranslateFragment extends Fragment {
     ImageView pic;
     ImageView addToFavBtn;
     HashMap<String,String> listOfLangCodes;
-    ArrayList<String> langList;
+ //   ArrayList<String> langList;
     String finalLang;
     String sourceText;
     String translatedText;
@@ -61,28 +63,41 @@ public class TranslateFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorTranslate));
 
+        final SharedPreferences prefs = getActivity().getSharedPreferences(
+                "chosenLanguage", Context.MODE_PRIVATE);
+        final String sharedPrefKey ="chosenLang";
         finalLangBtn = (Button)view.findViewById(R.id.translateToBtn);
         inputEditTxt = (EditText)view.findViewById(R.id.editTextToType);
         outputTxtView = (TextView)view.findViewById(R.id.resultTextView);
         pic = (ImageView)view.findViewById(R.id.arrowPic);
         finalLang = null;
-        langList = new ArrayList<>();
+        //langList = new ArrayList<>();
         listOfLangCodes = createMap();
         addToFavBtn = (ImageView) view.findViewById(R.id.addToFavBtn);
         db = new DatabaseHelper(getContext());
 
         // get list of languages and their codes
-        getListOfLanguages();
-        final ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_single_choice,langList);
+        final ArrayAdapter<String> langAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_single_choice,getListOfLanguages());
+        // get stored language from sharedPref
+        final String chosenLang = prefs.getString(sharedPrefKey,null);
+        // get position of stored language string in adapter
+        final int selected = (chosenLang!=null) ? langAdapter.getPosition(chosenLang) : -1;
+        //set title of btn with language string
+        if (chosenLang!= null) {
+            finalLangBtn.setText(chosenLang);
+        }
 
         finalLangBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Choose final language")
-                        .setSingleChoiceItems(langAdapter, 0, new DialogInterface.OnClickListener() {
+
+                builder.setTitle("Select destination language")
+                        .setSingleChoiceItems(langAdapter, selected, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
                                 finalLang = langAdapter.getItem(item);
+                                // save chosen language position in sharedPref
+                                prefs.edit().putString(sharedPrefKey,finalLang).apply();
                                 dialog.dismiss();
                                 Toast.makeText(getActivity(),finalLang,Toast.LENGTH_SHORT).show();
                                 finalLangBtn.setText(finalLang);
@@ -125,7 +140,8 @@ public class TranslateFragment extends Fragment {
 
 
 
-    private void getListOfLanguages(){
+    private ArrayList<String> getListOfLanguages(){
+        final ArrayList<String> langList = new ArrayList<>();
         Network.getInterface().getLangList("en",KEYAPI).enqueue(new Callback<LangList>()  {
             @Override
             public void onResponse(Call<LangList> call, Response<LangList> response) {
@@ -138,6 +154,7 @@ public class TranslateFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+        return langList;
     }
 
     private void translateText(){
